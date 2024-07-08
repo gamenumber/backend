@@ -1,0 +1,6 @@
+{
+    "name": "your-micro-name",
+    "runtime": "python3.9",
+    "buildpack": "python_flask",
+    "dependencies": ["requirements.txt"]
+}
