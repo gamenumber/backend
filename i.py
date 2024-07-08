@@ -51,14 +51,11 @@ def home():
     """
 
 @app.route('/chat', methods=['POST'])
+
 def chat():
     user_input = request.json.get('message')
     response = chat_with_gpt(user_input)
     return jsonify({'reply': response})
 
-def open_browser():
-    webbrowser.open_new("http://127.0.0.1:5000/")
-
 if __name__ == '__main__':
-    threading.Timer(1, open_browser).start()
     app.run(debug=True)
