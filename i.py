@@ -1,7 +1,6 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from openai import OpenAI
 import os
-import requests
 import webbrowser
 import threading
 
@@ -22,8 +21,34 @@ def chat_with_gpt(user_input):
     return response.choices[0].message.content
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>각청과의 귀여운 대화</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="background">
+                <img src="img/bg.jpg" alt="Background Image" class="background-image">
+            </div>
+            <div class="chat-window">
+                <div id="chat_log" class="chat-log"></div>
+                <div class="input-area">
+                    <input type="text" id="input_field" placeholder="메시지를 입력하세요...">
+                    <button id="send_button">전송</button>
+                </div>
+            </div>
+        </div>
+        <script src="script/jquery-1.12.4.js"></script>
+        <script src="script/script.js"></script>
+    </body>
+    </html>
+    """
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -35,6 +60,5 @@ def open_browser():
     webbrowser.open_new("http://127.0.0.1:5000/")
 
 if __name__ == '__main__':
-    # Use threading to open the browser after the Flask server starts
     threading.Timer(1, open_browser).start()
     app.run(debug=True)
