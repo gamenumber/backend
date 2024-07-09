@@ -1,13 +1,16 @@
 {
-  "dependencies": {
-    "openai": "^4.52.3"
-  }
-}
-
-{
   "name": "my_flask_app",
   "version": "1.0.0",
   "scripts": {
     "start": "python i.py"
   }
+  
 }
+
+{
+  "dependencies": {
+    "openai": "^4.52.3"
+  }
+}
+
+
