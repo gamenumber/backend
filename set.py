@@ -13,6 +13,8 @@ windows -> nodejs를 깔아주세요
 pip install openai  or  pip3 install openai
 pip install python-dotenv
 npm install openai@^4.0.0
+
+# pip3 install --break-system-packages torch
 pip install PyQt5
 """ 
 

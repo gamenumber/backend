@@ -1,13 +1,22 @@
 from flask import Flask, request, jsonify
 from openai import OpenAI
+from deta import Deta
 import os
-import webbrowser
-import threading
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # 모든 출처에서의 요청을 허용
 
+# OpenAI API 키 설정
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
+
+# Deta 설정
+deta_project_key = os.getenv("DETA_PROJECT_KEY")
+deta = Deta(deta_project_key)
+
+# Deta Base 인스턴스 생성
+db = deta.Base("your_base_name")
 
 def chat_with_gpt(user_input):
     response = client.chat.completions.create(
@@ -21,41 +30,25 @@ def chat_with_gpt(user_input):
     return response.choices[0].message.content
 
 @app.route('/')
-def home():
-    return """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>각청과의 귀여운 대화</title>
-        <link rel="stylesheet" href="css/styles.css">
-    </head>
-    <body>
-        <div class="container">
-            <div class="background">
-                <img src="img/bg.jpg" alt="Background Image" class="background-image">
-            </div>
-            <div class="chat-window">
-                <div id="chat_log" class="chat-log"></div>
-                <div class="input-area">
-                    <input type="text" id="input_field" placeholder="메시지를 입력하세요...">
-                    <button id="send_button">전송</button>
-                </div>
-            </div>
-        </div>
-        <script src="script/jquery-1.12.4.js"></script>
-        <script src="script/script.js"></script>
-    </body>
-    </html>
-    """
+def index():
+    return "Hello, this is the Keqing chatbot backend."
 
 @app.route('/chat', methods=['POST'])
-
 def chat():
     user_input = request.json.get('message')
     response = chat_with_gpt(user_input)
+    
+    # Deta Base에 대화 저장 예시
+    db.put({"user_input": user_input, "bot_response": response})
+    
     return jsonify({'reply': response})
+
+# Deta Base에서 데이터 조회 예시
+@app.route('/get_chat', methods=['GET'])
+def get_chat():
+    key = request.args.get('key')
+    item = db.get(key)
+    return jsonify(item)
 
 if __name__ == '__main__':
     app.run(debug=True)
