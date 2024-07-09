@@ -1,7 +1,6 @@
 flask
 openai
 flask-cors
-gunicorn==20.1.0
 Flask==2.0.1
 blinker==1.8.2
 click==8.1.7
